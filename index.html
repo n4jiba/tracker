@@ -10,109 +10,77 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --pink: #ec4899;
-            --dark-navy: #0f172a;
-            --slate: #334155;
-            --border: #e2e8f0;
-            --background: #f8fafc;
-            --card-background: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
+            --pink: #ec4899; --dark-navy: #0f172a; --slate: #334155; --border: #e2e8f0;
+            --background: #f8fafc; --card: #ffffff; --text: #0f172a; --text-muted: #64748b;
             --biology-accent: #16a34a; --biology-1: #f0fdf4; --biology-2: #dcfce7;
             --physics-accent: #9333ea; --physics-1: #f5f3ff; --physics-2: #ede9fe;
             --mathematics-accent: #2563eb; --mathematics-1: #eff6ff; --mathematics-2: #dbeafe;
         }
-
         [data-theme="dark"] {
             --dark-navy: #f8fafc; --slate: #cbd5e1; --border: #334155; --background: #0f172a;
-            --card-background: #1e293b; --text-main: #f1f5f9; --text-muted: #94a3b8;
+            --card: #1e293b; --text: #f1f5f9; --text-muted: #94a3b8;
             --biology-1: #064e3b22; --biology-2: #064e3b44;
             --physics-1: #4c1d9522; --physics-2: #4c1d9544;
             --mathematics-1: #1e3a8a22; --mathematics-2: #1e3a8a44;
         }
-
-        * { box-sizing: border-box; transition: background-color 0.2s, color 0.2s; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--background); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.5; }
+        * { box-sizing: border-box; transition: background-color 0.2s; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--background); color: var(--text); margin: 0; padding: 20px; }
         .container { max-width: 1400px; margin: 0 auto; }
-
-        header { background: #0f172a; color: white; padding: 30px; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        header { background: #0f172a; color: white; padding: 30px; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
         .najiba-tag { color: var(--pink); font-size: 1rem; font-weight: 800; }
-        
         .theme-toggle { background: var(--pink); border: none; color: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 700; }
-        .school-progress-bar { background: #1e293b; border-radius: 50px; height: 14px; overflow: hidden; margin: 15px 0; border: 1px solid #334155; }
+        .school-progress-bar { background: #1e293b; border-radius: 50px; height: 14px; overflow: hidden; margin: 15px 0; border: 1px solid #334155; width: 300px; }
         .fill { height: 100%; background: var(--pink); width: 0%; transition: 1.5s ease-out; }
-        .school-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; }
-
         nav { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px; }
-        .nav-btn { padding: 12px 24px; background: var(--card-background); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-weight: 700; color: var(--slate); white-space: nowrap; }
+        .nav-btn { padding: 12px 24px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-weight: 700; color: var(--slate); white-space: nowrap; }
         .nav-btn.active { background: var(--pink); color: white; border-color: var(--pink); }
-
-        .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 25px; }
-        .view { display: none; }
-        .view.active { display: block; }
-        .card { background: var(--card-background); border-radius: 14px; border: 1px solid var(--border); margin-bottom: 20px; overflow: hidden; }
+        .main-grid { display: grid; grid-template-columns: 1fr 420px; gap: 25px; }
+        .view { display: none; } .view.active { display: block; }
+        .card { background: var(--card); border-radius: 14px; border: 1px solid var(--border); margin-bottom: 20px; overflow: hidden; }
         .card-header { padding: 18px 20px; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
-
-        .checklist-item { display: grid; grid-template-columns: 1fr 70px 70px 70px 70px; padding: 12px 20px; align-items: center; border-bottom: 1px solid var(--border); }
-        .header-row { background: var(--card-background) !important; font-size: 0.65rem !important; font-weight: 800; color: var(--text-muted); text-transform: uppercase; text-align: center; }
+        .checklist-item { display: grid; grid-template-columns: 1fr 80px 80px 80px 80px; padding: 12px 20px; align-items: center; border-bottom: 1px solid var(--border); }
+        .header-row { background: var(--card) !important; font-size: 0.65rem !important; font-weight: 800; color: var(--text-muted); text-transform: uppercase; text-align: center; }
         .header-row div:first-child { text-align: left; }
-
         .biology-0 { background: var(--biology-1); } .biology-1 { background: var(--biology-2); }
         .physics-0 { background: var(--physics-1); } .physics-1 { background: var(--physics-2); }
         .mathematics-0 { background: var(--mathematics-1); } .mathematics-1 { background: var(--mathematics-2); }
-
-        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; justify-self: center; }
-        .cb-biology { accent-color: var(--biology-accent); }
-        .cb-physics { accent-color: var(--physics-accent); }
-        .cb-mathematics { accent-color: var(--mathematics-accent); }
-
-        /* Exam Logging Subject Colors */
-        .subject-exam-container { margin-bottom: 40px; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
-        .subject-exam-header { padding: 15px 20px; color: white; font-weight: 800; text-transform: uppercase; }
-        .bg-biology { background: var(--biology-accent); }
-        .bg-physics { background: var(--physics-accent); }
-        .bg-mathematics { background: var(--mathematics-accent); }
-        .exam-year-block { padding: 15px; border-bottom: 1px solid var(--border); background: var(--card-background); }
+        input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; justify-self: center; }
+        .cb-biology { accent-color: var(--biology-accent); } .cb-physics { accent-color: var(--physics-accent); } .cb-mathematics { accent-color: var(--mathematics-accent); }
+        .exam-subject-container { margin-bottom: 40px; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; background: var(--card); }
+        .exam-head { padding: 15px 20px; color: white; font-weight: 800; text-transform: uppercase; }
+        .bg-bio { background: var(--biology-accent); } .bg-phys { background: var(--physics-accent); } .bg-math { background: var(--mathematics-accent); }
+        .exam-year-row { padding: 15px; border-bottom: 1px solid var(--border); }
         .paper-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 10px; }
-        .paper-card { background: var(--background); padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.75rem; }
-        .log-area { display: none; margin-top: 10px; padding: 10px; background: var(--card-background); border: 1px dotted var(--border); border-radius: 6px; }
+        .paper-card { background: var(--background); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
+        .log-area { display: none; margin-top: 10px; padding: 10px; background: var(--card); border: 1px dotted var(--border); border-radius: 6px; }
         .log-area.active { display: block; }
-        .log-input { width: 100%; margin-bottom: 5px; padding: 5px; font-size: 0.7rem; border-radius: 4px; border: 1px solid var(--border); background: var(--background); color: var(--text-main); }
-
+        .log-input { width: 100%; margin-bottom: 5px; padding: 5px; font-size: 0.7rem; border-radius: 4px; border: 1px solid var(--border); background: var(--background); color: var(--text); }
         .stats-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         .stats-table th { padding: 10px 5px; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--background); }
         .stats-table td { padding: 12px 5px; text-align: center; border-top: 1px solid var(--border); font-weight: 700; }
-        .stats-table td:first-child { text-align: left; padding-left: 15px; font-weight: 800; }
-
+        .stats-table td:first-child { text-align: left; padding-left: 15px; font-weight: 800; width: 100px; }
         .btn-pink { background: var(--pink); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .delete-btn { color: #ef4444; cursor: pointer; border: none; background: none; font-weight: 800; }
-        #sync-indicator { font-size: 10px; color: #22c55e; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <header>
-        <div class="header-top">
-            <h1>Sixth Form Tracker</h1>
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <span class="najiba-tag">Najiba's Hub</span>
-                <button class="theme-toggle" onclick="toggleTheme()">Theme Toggle</button>
-            </div>
+        <div>
+            <h1 style="margin:0">Sixth Form Tracker</h1>
+            <span class="najiba-tag">Welcome, Najiba</span>
         </div>
-        <div class="school-progress-section">
-            <div class="school-progress-bar"><div id="school-bar-fill" class="fill"></div></div>
-            <div class="school-labels">
-                <span id="school-text-detail">Syncing with cloud...</span>
+        <div style="text-align: right;">
+            <div id="school-text-detail" style="font-size:0.7rem; color:#94a3b8; margin-bottom:5px">Syncing...</div>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div class="school-progress-bar"><div id="school-bar-fill" class="fill"></div></div>
                 <span id="school-pc-tag" style="font-weight: 800; color: var(--pink);">0%</span>
+                <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
             </div>
-            <div id="sync-indicator">● Cloud Synced</div>
         </div>
     </header>
 
@@ -140,183 +108,22 @@
                 <div class="checklist-item header-row"><div>Specification Point</div><div>Class</div><div>Self-Taught</div><div>Revised</div><div>Questions</div></div>
                 <div id="list-mathematics"></div>
             </div>
-            <div id="view-exams" class="view"><div id="exam-logging-container"></div></div>
+            <div id="view-exams" class="view"><div id="exam-logs-root"></div></div>
         </main>
-
         <aside>
-            <div class="card"><div class="card-header">Detailed Subject Stats</div><table class="stats-table"><thead><tr><th>Subject</th><th>Class</th><th>Self</th><th>Revised</th><th>Questions</th></tr></thead><tbody id="sidebar-stats-body"></tbody></table></div>
-            <div class="card"><div class="card-header">To-Do List</div><div style="padding:15px; display:flex; gap:8px;"><input type="text" id="todo-input" placeholder="New task..." style="flex:1; padding:8px; border-radius:6px; background:var(--card-background); color:var(--text-main); border:1px solid var(--border);"><button class="btn-pink" onclick="addNewTodo()">+</button></div><div id="todo-display-list"></div></div>
-            <div class="card"><div class="card-header">Test Score Logger</div><div style="padding:15px; background:rgba(0,0,0,0.03);"><div style="display:flex; gap:5px; margin-bottom:12px;"><select id="score-subject-select" style="padding:8px; border-radius:6px; background:var(--card-background); color:var(--text-main); border:1px solid var(--border);"><option value="biology">Bio</option><option value="physics">Phys</option><option value="mathematics">Maths</option></select><input type="number" id="score-percent-input" placeholder="%" style="width:60px; padding:8px; border-radius:6px; background:var(--card-background); color:var(--text-main); border:1px solid var(--border);"><button class="btn-pink" onclick="logNewScore()">Log</button></div><div id="average-scores-display" style="font-size:0.75rem; font-weight:800;"></div></div><div id="score-history-scroll" style="max-height: 250px; overflow-y: auto;"></div></div>
+            <div class="card"><div class="card-header">Detailed Subject Statistics</div><table class="stats-table"><thead><tr><th>Subject</th><th>Class</th><th>Self</th><th>Revised</th><th>Questions</th></tr></thead><tbody id="sidebar-stats-body"></tbody></table></div>
+            <div class="card"><div class="card-header">To-Do List</div><div style="padding:15px; display:flex; gap:8px;"><input type="text" id="todo-input" placeholder="New task..." style="flex:1; padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--card); color:var(--text);"><button class="btn-pink" onclick="addNewTodo()">+</button></div><div id="todo-display-list"></div></div>
+            <div class="card"><div class="card-header">Test Score Logger</div><div style="padding:15px; background:rgba(0,0,0,0.03);"><div style="display:flex; gap:5px; margin-bottom:12px;"><select id="score-subject-select" style="padding:8px; border-radius:6px; background:var(--card); color:var(--text);"><option value="biology">Biology</option><option value="physics">Physics</option><option value="mathematics">Maths</option></select><input type="number" id="score-input" placeholder="%" style="width:60px; padding:8px; border-radius:6px; background:var(--card); color:var(--text); border:1px solid var(--border);"><button class="btn-pink" onclick="logNewScore()">Log</button></div><div id="average-display" style="font-size:0.75rem; font-weight:800;"></div></div><div id="score-history" style="max-height: 250px; overflow-y: auto;"></div></div>
         </aside>
     </div>
 </div>
 
 <script>
-    // --- FIREBASE INITIALIZATION ---
-    const firebaseConfig = {
-      apiKey: "AIzaSyCBPH22O27bnN-f3EVQfYkOxswn5JPhyDM",
-      authDomain: "najibatracker-732ab.firebaseapp.com",
-      projectId: "najibatracker-732ab",
-      storageBucket: "najibatracker-732ab.firebasestorage.app",
-      messagingSenderId: "112517485792",
-      appId: "1:112517485792:web:05eb67ac9bcef7b1012c85",
-      databaseURL: "https://najibatracker-732ab-default-rtdb.firebaseio.com/"
-    };
-
+    const firebaseConfig = { apiKey: "AIzaSyCBPH22O27bnN-f3EVQfYkOxswn5JPhyDM", authDomain: "najibatracker-732ab.firebaseapp.com", projectId: "najibatracker-732ab", storageBucket: "najibatracker-732ab.firebasestorage.app", messagingSenderId: "112517485792", appId: "1:112517485792:web:05eb67ac9bcef7b1012c85", databaseURL: "https://najibatracker-732ab-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // --- DATA ---
-    const schoolHolidays = [{ s: '2025-10-20', e: '2025-10-31' }, { s: '2025-12-22', e: '2026-01-02' }, { s: '2026-02-16', e: '2026-02-20' }, { s: '2026-03-30', e: '2026-04-10' }, { s: '2026-05-25', e: '2026-05-29' }, '2025-09-01', '2026-04-03', '2026-04-06', '2026-05-04', '2026-05-25', '2026-03-20', '2026-05-27', { s: '2026-10-19', e: '2026-10-30' }, { s: '2026-12-21', e: '2027-01-01' }, { s: '2027-02-15', e: '2027-02-19' }, { s: '2027-03-26', e: '2027-04-09' }, { s: '2027-05-31', e: '2027-06-04' }];
-    const mathsSpecPoints = ["1.1 Index laws", "1.2 Expanding brackets", "1.3 Factorising", "1.4 Negative and fractional indices", "1.5 Surds", "1.6 Rationalising denominators", "2.1 Solving quadratic equations", "2.2 Completing the square", "2.3 Functions", "2.4 Quadratic graphs", "2.5 The discriminant", "2.6 Modelling with quadratics", "3.1 Linear simultaneous equations", "3.2 Quadratic simultaneous equations", "3.3 Simultaneous equations on graphs", "3.4 Linear inequalities", "3.5 Quadratic inequalities", "3.6 Inequalities on graphs", "3.7 Regions", "4.1 Cubic graphs", "4.2 Quartic graphs", "4.3 Reciprocal graphs", "4.4 Points of intersection", "4.5 Translating graphs", "4.6 Stretching graphs", "4.7 Transforming functions", "5.1 y = mx + c", "5.2 Equations of straight lines", "5.3 Parallel and perpendicular lines", "5.4 Length and area", "5.5 Modelling with straight lines", "6.1 Midpoints and perpendicular bisectors", "6.2 Equation of a circle", "6.3 Intersections of straight lines and circles", "6.4 Use tangent and chord properties", "6.5 Circles and triangles", "7.1 Algebraic fractions", "7.2 Dividing polynomials", "7.3 The factor theorem", "7.4 Mathematical proof", "7.5 Methods of proof", "8.1 Pascal’s triangle", "8.2 Factorial notation", "8.3 The binomial expansion", "8.4 Solving binomial problems", "8.5 Binomial estimation", "9.1 The cosine rule", "9.2 The sine rule", "9.3 Areas of triangles", "9.4 Solving triangle problems", "9.5 Graphs of sine, cosine and tangent", "9.6 Transforming trigonometric graphs", "10.1 Angles in all four quadrants", "10.2 Exact values of trigonometrical ratios", "10.3 Trigonometric identities", "10.4 Simple trigonometric equations", "10.5 Harder trigonometric equations", "10.6 Equations and identities", "11.1 Vectors", "11.2 Representing vectors", "11.3 Magnitude and direction", "11.4 Position vectors", "11.5 Solving geometric problems", "11.6 Modelling with vectors", "12.1 Gradients of curves", "12.2 Finding the derivative", "12.3 Differentiating xn", "12.4 Differentiating quadratics", "12.5 Differentiating functions with two or more terms", "12.6 Gradients, tangents and normal", "12.7 Increasing and decreasing functions", "12.8 Second order derivatives", "12.9 Stationary points", "12.10 Sketching gradient functions", "12.11 Modelling with differentiation", "13.1 Integrating xn", "13.2 Indefinite integrals", "13.3 Finding functions", "13.4 Definite integrals", "13.5 Areas under curves", "13.6 Areas under the x-axis", "13.7 Areas between curves and lines", "14.1 Exponential functions", "14.2 y = ex", "14.3 Exponential modelling", "14.4 Logarithms", "14.5 Laws of logarithms", "14.6 Solving equations using logarithms", "14.7 Working with natural logarithms", "14.8 Logarithms and non-linear data", "1.1 Populations and samples", "1.2 Sampling", "1.3 Non-random sampling", "1.4 Types of data", "1.5 The large data set", "2.1 Measures of central tendency", "2.2 Other measures of location", "2.3 Measures of spread", "2.4 Variance and standard deviation", "2.5 Coding", "3.1 Outliers", "3.2 Box plots", "3.3 Cumulative frequency", "3.4 Histograms", "3.5 Comparing data", "4.1 Correlation", "4.2 Linear regression", "5.1 Calculating probabilities", "5.2 Venn diagrams", "5.3 Mutually exclusive and independent events", "5.4 Tree diagrams", "6.1 Probability distributions", "6.2 The binomial distribution", "6.3 Cumulative probabilities", "7.1 Hypothesis testing", "7.2 Finding critical values", "7.3 One-tailed tests", "7.4 Two-tailed tests", "8.1 Constructing a model", "8.2 Modelling assumptions", "8.3 Quantities and units", "8.4 Working with vectors", "9.1 Displacement–time graphs", "9.2 Velocity–time graphs", "9.3 Constant acceleration formulae 1", "9.4 Constant acceleration formulae 2", "9.5 Vertical motion under gravity", "10.1 Force diagrams", "10.2 Forces as vectors", "10.3 Forces and acceleration", "10.4 Motion in 2 dimensions", "10.5 Connected particles", "10.6 Pulleys", "11.1 Functions of time", "11.2 Using differentiation", "11.3 Maxima and minima problems", "11.4 Using integration", "11.5 Constant acceleration formulae", "1.1 Proof by contradiction", "1.2 Algebraic fractions", "1.3 Partial fractions", "1.4 Repeated factors", "1.5 Algebraic division", "2.1 The modulus function", "2.2 Functions and mappings", "2.3 Composite functions", "2.4 Inverse functions", "2.5 y = |f(x)| and y = f(|x|)", "2.6 Combining transformations", "2.7 Solving modulus problems", "3.1 Arithmetic sequences", "3.2 Arithmetic series", "3.3 Geometric sequences", "3.4 Geometric series", "3.5 Sum to infinity", "3.6 Sigma notation", "3.7 Recurrence relations", "3.8 Modelling with series", "4.1 Expanding (1 + x)n", "4.2 Expanding (a + bx)n", "4.3 Using partial fractions", "5.1 Radian measure", "5.2 Arc length", "5.3 Areas of sectors and segments", "5.4 Solving trigonometric equations", "5.5 Small angle approximations", "6.1 Secant, cosecant and cotangent", "6.2 Graphs of sec x, cosec x and cot x", "6.3 Using sec x, cosec x and cot x", "6.4 Trigonometric identities", "6.5 Inverse trigonometric functions", "7.1 Addition formulae", "7.2 Using the angle addition formulae", "7.3 Double-angle formulae", "7.4 Solving trigonometric equations", "7.5 Simplifying a cos x ± b sin x", "7.6 Proving trigonometric identities", "7.7 Modelling with trigonometric functions", "8.1 Parametric equations", "8.2 Using trigonometric identities", "8.3 Curve sketching", "8.4 Points of intersection", "8.5 Modelling with parametric equations", "9.1 Differentiating sin x and cos x", "9.2 Differentiating exponentials and logarithms", "9.3 The chain rule", "9.4 The product rule", "9.5 The quotient rule", "9.6 Differentiating trigonometric functions", "9.7 Parametric differentiation", "9.8 Implicit differentiation", "9.9 Using second derivatives", "9.10 Rates of change", "10.1 Locating roots", "10.2 Iteration", "10.3 The Newton–Raphson method", "10.4 Applications to modelling", "11.1 Integrating standard functions", "11.2 Integrating f(ax + b)", "11.3 Using trigonometric identities", "11.4 Reverse chain rule", "11.5 Integration by substitution", "11.6 Integration by parts", "11.7 Partial fractions", "11.8 Finding areas", "11.9 The trapezium rule", "11.10 Solving differential equations", "11.11 Modelling with differential equations", "12.1 3D coordinates", "12.2 Vectors in 3D", "12.3 Solving geometric problems", "12.4 Application to mechanics", "1.1 Exponential models", "1.2 Measuring correlation", "1.3 Hypothesis testing for zero correlation", "2.1 Set notation", "2.2 Conditional probability", "2.3 Conditional probabilities in Venn diagrams", "2.4 Probability formulae", "2.5 Tree diagrams", "3.1 The normal distribution", "3.2 Finding probabilities for normal distributions", "3.3 The inverse normal distribution function", "3.4 The standard normal distribution", "3.5 Finding μ and σ", "3.6 Approximating a binomial distribution", "3.7 Hypothesis testing with the normal distribution", "4.1 Moments", "4.2 Resultant moments", "4.3 Equilibrium", "4.4 Centres of mass", "4.5 Tilting", "5.1 Resolving forces", "5.2 Inclined planes", "5.3 Friction", "6.1 Horizontal projection", "6.2 Horizontal and vertical components", "6.3 Projection at any angle", "6.4 Projectile motion formulae", "7.1 Static particles", "7.2 Modelling with statics", "7.3 Friction and static particles", "7.4 Static rigid bodies", "7.5 Dynamics and inclined planes", "7.6 Connected particles", "8.1 Vectors in kinematics", "8.2 Vector methods with projectiles", "8.3 Variable acceleration in one dimension", "8.4 Differentiating vectors", "8.5 Integrating vectors"];
-    const biologySpecPoints = ["2.1.1 Cell structure", "2.1.2 Biological molecules", "2.1.3 Nucleotides and nucleic acids", "2.1.4 Enzymes", "2.1.5 Biological membranes", "2.1.6 Cell division, cell diversity and cellular organisation", "3.1.1 Exchange surfaces", "3.1.2 Transport in animals", "3.1.3 Transport in plants", "4.1.1 Communicable diseases, disease prevention and the immune system", "4.2.1 Biodiversity", "4.2.2 Classification and evolution", "5.1.1 Communication and homeostasis", "5.1.2 Excretion as an example of homeostatic control", "5.1.3 Neuronal communication", "5.1.4 Hormonal communication", "5.1.5 Plant and animal responses", "5.2.1 Photosynthesis", "5.2.2 Respiration", "6.1.1 Cellular control", "6.1.2 Patterns of inheritance", "6.1.3 Manipulating genomes", "6.2.1 Cloning and biotechnology", "6.3.1 Ecosystems", "6.3.2 Populations and sustainability"];
-    const physicsSpecPoints = ["2.1.1 Physical quantities", "2.1.2 S.I. units", "2.2.1 Measurements and uncertainties", "2.3.1 Scalars and vectors", "3.1.1 Kinematics", "3.1.2 Linear motion", "3.1.3 Projectile motion", "3.2.1 Dynamics", "3.2.2 Newton’s laws of motion", "3.2.3 Statics", "3.3.1 Work and conservation of energy", "3.3.2 Kinetic and potential energies", "3.3.3 Power", "3.4.1 Springs", "3.4.2 Mechanical properties of matter", "3.5.1 Newton’s laws of motion", "3.5.2 Momentum", "4.1.1 Charge and current", "4.2.1 Circuit symbols", "4.2.2 P.d. and e.m.f.", "4.2.3 Resistance", "4.3.1 Series and parallel circuits", "4.3.2 Internal resistance", "4.3.3 Potential dividers", "4.4.1 Wave motion", "4.4.2 Electromagnetic waves", "4.4.3 Superposition", "4.4.4 Stationary waves", "4.5.1 Photons", "4.5.2 The photoelectric effect", "4.5.3 Wave–particle duality", "5.1.1 Temperature", "5.1.2 Solid, liquid and gas", "5.1.3 Specific heat capacity and latent heat", "5.1.4 Ideal gases", "5.2.1 Kinematics of circular motion", "5.2.2 Centripetal force", "5.3.1 Simple harmonic oscillations", "5.3.2 Energy of a simple harmonic oscillator", "5.3.3 Damping and resonance", "5.4.1 Gravitational fields", "5.4.2 Newton’s law of gravitation", "5.4.3 Planetary motion", "5.4.4 Gravitational potential and energy", "5.5.1 Stars", "5.5.2 Electromagnetic radiation from stars", "5.5.3 Cosmology", "6.1.1 Capacitors", "6.1.2 Energy", "6.1.3 Charging and discharging capacitors", "6.2.1 Point and spherical charges", "6.2.2 Coulomb’s law", "6.2.3 Uniform electric field", "6.2.4 Electric potential and energy", "6.3.1 Magnetic fields", "6.3.2 Motion of charged particles", "6.3.3 Electromagnetism", "6.4.1 The nuclear atom", "6.4.2 Fundamental particles", "6.4.3 Radioactivity", "6.4.4 Fission and fusion", "6.5.1 X-rays", "6.5.2 Diagnostic methods in medicine", "6.5.3 Ultrasound"];
-    const fullSpecification = { biology: biologySpecPoints, physics: physicsSpecPoints, mathematics: mathsSpecPoints };
-
-    let state = { checks: {}, exams: {}, scores: { biology: [], physics: [], mathematics: [] }, todos: [], theme: 'light' };
-
-    // --- CLOUD SYNC ---
-    function cloudSave() {
-        db.ref('najiba_data').set(state);
-        document.getElementById('sync-indicator').style.display = 'block';
-        setTimeout(() => { document.getElementById('sync-indicator').style.display = 'none'; }, 2000);
-        refreshStats();
-    }
-
-    db.ref('najiba_data').on('value', (snap) => {
-        const val = snap.val();
-        if(val) {
-            state = val;
-            document.documentElement.setAttribute('data-theme', state.theme);
-            refreshUI();
-        }
-    });
-
-    // --- LOGIC ---
-    window.navigate = (id, b) => {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(bn => bn.classList.remove('active'));
-        document.getElementById(`view-${id}`).classList.add('active');
-        b.classList.add('active');
-    };
-
-    function toggleTheme() {
-        state.theme = state.theme === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', state.theme);
-        cloudSave();
-    }
-
-    function updateSchool() {
-        const now = new Date();
-        const cfg = now >= new Date('2026-09-02') ? {s:'2026-09-02', e:'2027-07-23', l:'Year 13'} : {s:'2025-09-01', e:'2026-07-22', l:'Year 12'};
-        let total = 0, passed = 0;
-        for (let d = new Date(cfg.s); d <= new Date(cfg.e); d.setDate(d.getDate() + 1)) {
-            const we = d.getDay() === 0 || d.getDay() === 6;
-            const ds = d.toISOString().split('T')[0];
-            const hol = schoolHolidays.some(h => typeof h === 'string' ? h === ds : (ds >= h.s && ds <= h.e));
-            if(!we && !hol) { total++; if(d <= now) passed++; }
-        }
-        const pc = Math.round((passed/total)*100);
-        document.getElementById('school-bar-fill').style.width = pc+'%';
-        document.getElementById('school-pc-tag').innerText = pc+'%';
-        document.getElementById('school-text-detail').innerText = `${cfg.l} | Day ${passed} of ${total}`;
-    }
-
-    function getPapers(sub, lvl, yr) {
-        if(sub === 'biology') return lvl==='as'?['Paper 1 (Breadth)','Paper 2 (Depth)']:['Biological Processes','Biological Diversity','Unified Biology'];
-        if(sub === 'physics') return lvl==='as'?['Paper 1 (Breadth)','Paper 2 (Depth)']:['Modelling Physics','Exploring Physics','Unified Physics'];
-        if(sub === 'mathematics') {
-            if(lvl==='as') return (yr==='2018' || yr==='Specimen')?['Paper 1 (Pure)','Paper 2 (Statistics and Mechanics Combined)']:['Paper 1 (Pure)','Paper 2 (Statistics)','Paper 3 (Mechanics)'];
-            return ['Pure Mathematics 1','Pure Mathematics 2','Statistics','Mechanics'];
-        }
-    }
-
-    // --- RENDERERS ---
-    function renderChecklists() {
-        const accs = { biology: 'cb-biology', physics: 'cb-physics', mathematics: 'cb-mathematics' };
-        ['biology','physics','mathematics'].forEach(sub => {
-            const cont = document.getElementById(`list-${sub}`);
-            cont.innerHTML = '';
-            fullSpecification[sub].forEach((txt, i) => {
-                const row = document.createElement('div');
-                row.className = `checklist-item ${sub}-${i%2}`;
-                row.innerHTML = `<div>${txt}</div>` + ['class','self','rev','ques'].map(c => {
-                    const id = `${sub}-${i}-${c}`;
-                    return `<input type="checkbox" class="${accs[sub]}" ${state.checks[id]?'checked':''} onclick="upCheck('${id}')">`;
-                }).join('');
-                cont.appendChild(row);
-            });
-        });
-    }
-
-    function renderExams() {
-        const cont = document.getElementById('exam-logging-container');
-        const subjects = [
-            { id:'biology', n:'Biology', color:'bg-biology', acc:'cb-biology', yrs:{as:[2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,'Specimen'], a:[2018,2019,2020,2021,2022,2023,2024,2025,'Specimen']} },
-            { id:'physics', n:'Physics', color:'bg-physics', acc:'cb-physics', yrs:{as:[2018,2019,2020,2021,2022,2023,2024,2025,'Specimen'], a:[2018,2019,2020,2021,2022,2023,2024,2025,'Specimen']} },
-            { id:'mathematics', n:'Mathematics', color:'bg-mathematics', acc:'cb-mathematics', yrs:{as:[2018,2019,2020,2021,2022,2023,2024,2025,'Specimen'], a:[2018,2019,2020,2021,2022,2023,2024,2025,'Specimen']} }
-        ];
-        cont.innerHTML = '';
-        subjects.forEach(s => {
-            let h = `<div class="subject-exam-container"><div class="subject-exam-header ${s.color}">${s.n} Papers</div>`;
-            ['as','a'].forEach(lvl => {
-                s.yrs[lvl].forEach(yr => {
-                    h += `<div class="exam-year-block"><span class="exam-level-tag">${yr} ${lvl.toUpperCase()} LEVEL</span><div class="paper-grid">`;
-                    getPapers(s.id, lvl, yr.toString()).forEach(p => {
-                        const id = `${s.id}-${lvl}-${yr}-${p.replace(/\s+/g,'')}`;
-                        const d = state.exams[id] || { done:false, marks:'', total:'', date:'', notes:'' };
-                        h += `<div class="paper-card"><b>${p}</b><br>
-                                <input type="checkbox" class="${s.acc}" ${d.done?'checked':''} onclick="upExDone('${id}')">
-                                <button class="btn-pink" style="font-size:0.5rem; padding:3px" onclick="toggleLogs('${id}')">Logs</button>
-                                <div id="log-${id}" class="log-area">
-                                    <input type="number" class="log-input" placeholder="Marks" value="${d.marks}" onchange="upExVal('${id}','marks',this.value)">
-                                    <input type="number" class="log-input" placeholder="Total" value="${d.total}" onchange="upExVal('${id}','total',this.value)">
-                                    <input type="date" class="log-input" value="${d.date}" onchange="upExVal('${id}','date',this.value)">
-                                    <input type="text" class="log-input" placeholder="Notes" value="${d.notes}" onchange="upExVal('${id}','notes',this.value)">
-                                </div>
-                              </div>`;
-                    });
-                    h += `</div></div>`;
-                });
-            });
-            h += `</div>`;
-            cont.innerHTML += h;
-        });
-    }
-
-    // --- ACTIONS ---
-    window.upCheck = (id) => { state.checks[id] = !state.checks[id]; cloudSave(); };
-    window.upExDone = (id) => { if(!state.exams[id]) state.exams[id]={done:false,marks:'',total:'',date:'',notes:''}; state.exams[id].done = !state.exams[id].done; cloudSave(); };
-    window.toggleLogs = (id) => document.getElementById(`log-${id}`).classList.toggle('active');
-    window.upExVal = (id, k, v) => { if(!state.exams[id]) state.exams[id]={done:true,marks:'',total:'',date:'',notes:''}; state.exams[id][k]=v; cloudSave(); };
-    window.addNewTodo = () => { const i = document.getElementById('todo-input'); if(i.value){ state.todos.push(i.value); i.value=''; renderTodos(); cloudSave(); } };
-    window.deleteTodoItem = (i) => { state.todos.splice(i,1); renderTodos(); cloudSave(); };
-    window.logNewScore = () => { const s = document.getElementById('score-subject-select').value, v = document.getElementById('score-percent-input').value; if(v){ state.scores[s].push(Number(v)); document.getElementById('score-percent-input').value=''; renderScores(); cloudSave(); } };
-    window.deleteScoreItem = (s, i) => { state.scores[s].splice(i,1); renderScores(); cloudSave(); };
-
-    function refreshUI() {
-        updateSchool(); renderChecklists(); renderExams(); renderTodos(); renderScores(); refreshStats();
-    }
-    function renderTodos() { document.getElementById('todo-display-list').innerHTML = state.todos.map((t,i) => `<div class="score-item"><span>${t}</span><button class="delete-btn" onclick="deleteTodoItem(${i})">✕</button></div>`).join(''); }
-    function renderScores() {
-        const hist = document.getElementById('score-history-scroll'), avgB = document.getElementById('average-scores-display');
-        hist.innerHTML = ''; avgB.innerHTML = '';
-        ['biology','physics','mathematics'].forEach(sub => {
-            const list = state.scores[sub] || [], avg = list.length ? Math.round(list.reduce((a,b)=>a+b)/list.length) : 0;
-            avgB.innerHTML += `<div style="display:flex; justify-content:space-between"><span>${sub.toUpperCase()}:</span><span>${avg}%</span></div>`;
-            list.forEach((v, idx) => { hist.innerHTML += `<div class="score-item"><span><b>${sub.toUpperCase()}</b>: ${v}%</span><button class="delete-btn" onclick="deleteScoreItem('${sub}', ${idx})">✕</button></div>`; });
-        });
-    }
-    function refreshStats() {
-        const body = document.getElementById('sidebar-stats-body'); body.innerHTML = '';
-        ['biology','physics','mathematics'].forEach(sub => {
-            const tot = fullSpecification[sub].length;
-            const get = (c) => Object.keys(state.checks).filter(k => k.startsWith(sub) && k.endsWith(c) && state.checks[k]).length;
-            body.innerHTML += `<tr><td><b>${sub}</b></td><td>${Math.round(get('class')/tot*100)}%</td><td>${Math.round(get('self')/tot*100)}%</td><td>${Math.round(get('rev')/tot*100)}%</td><td>${Math.round(get('ques')/tot*100)}%</td></tr>`;
-        });
-    }
-
-    refreshUI();
-</script>
-</body>
-</html>
+    const holidays = [{ s: '2025-10-20', e: '2025-10-31' }, { s: '2025-12-22', e: '2026-01-02' }, { s: '2026-02-16', e: '2026-02-20' }, { s: '2026-03-30', e: '2026-04-10' }, { s: '2026-05-25', e: '2026-05-29' }, '2025-09-01', '2026-04-03', '2026-04-06', '2026-05-04', '2026-05-25', '2026-03-20', '2026-05-27', { s: '2026-10-19', e: '2026-10-30' }, { s: '2026-12-21', e: '2027-01-01' }, { s: '2027-02-15', e: '2027-02-19' }, { s: '2027-03-26', e: '2027-04-09' }, { s: '2027-05-31', e: '2027-06-04' }];
+    const biologyList = ["2.1.1 Cell structure", "2.1.2 Biological molecules", "2.1.3 Nucleotides and nucleic acids", "2.1.4 Enzymes", "2.1.5 Biological membranes", "2.1.6 Cell division, cell diversity and cellular organisation", "3.1.1 Exchange surfaces", "3.1.2 Transport in animals", "3.1.3 Transport in plants", "4.1.1 Communicable diseases, disease prevention and the immune system", "4.2.1 Biodiversity", "4.2.2 Classification and evolution", "5.1.1 Communication and homeostasis", "5.1.2 Excretion as an example of homeostatic control", "5.1.3 Neuronal communication", "5.1.4 Hormonal communication", "5.1.5 Plant and animal responses", "5.2.1 Photosynthesis", "5.2.2 Respiration", "6.1.1 Cellular control", "6.1.2 Patterns of inheritance", "6.1.3 Manipulating genomes", "6.2.1 Cloning and biotechnology", "6.3.1 Ecosystems", "6.3.2 Populations and sustainability"];
+    const physicsList = ["2.1.1 Physical quantities", "2.1.2 S.I. units", "2.2.1 Measurements and uncertainties", "2.3.1 Scalars and vectors", "3.1.1 Kinematics", "3.1.2 Linear motion", "3.1.3 Projectile motion", "3.2.1 Dynamics", "3.2.2 Newton’s laws of motion", "3.2.3 Statics", "3.3.1 Work and conservation of energy", "3.3.2 Kinetic and potential energies", "3.3.3 Power", "3.4.1 Springs", "3.4.2 Mechanical properties of matter", "3.5.1 Newton’s laws of motion", "3.5.2 Momentum", "4.1.1 Charge and current", "4.2.1 Circuit symbols", "4.2.2 P.d. and e.m.f.", "4.2.3 Resistance", "4.3.1 Series and parallel circuits", "4.3.2 Internal resistance", "4.3.3 Potential dividers", "4.4.1 Wave motion", "4.4.2 Electromagnetic waves", "4.4.3 Superposition", "4.4.4 Stationary waves", "4.5.1 Photons", "4.5.2 The photoelectric effect", "4.5.3 Wave–particle duality", "5.1.1 Temperature", "5.1.2 Solid, liquid and gas", "5.1.3 Specific heat capacity and latent heat", "5.1.4 Ideal gases", "5.2.1 Kinematics of circular motion", "5.2.2 Centripetal force", "5.3.1 Simple harmonic oscillations", "5.3.2 Energy of a simple harmonic oscillator", "5.3.3 Damping and resonance", "5.4.1 Gravitational fields", "5.4.2 Newton’s law of gravitation", "5.4.3 Planetary motion", "5.4.4 Gravitational potential and energy", "5.5.1 Stars", "5.5.2 Electromagnetic radiation from stars", "5.5.3 Cosmology", "6.1.1 Capacitors", "6.1.2 Energy", "6.1.3 Charging and discharging capacitors", "6.2.1 Point and spherical charges", "6.2.2 Coulomb’s law", "6.2.3 Uniform electric field", "6.2.4 Electric potential and energy", "6.3.1 Magnetic fields", "6.3.2 Motion of charged particles", "6.3.3 Electromagnetism", "6.4.1 The nuclear atom", "6.4.2 Fundamental particles", "6.4.3 Radioactivity", "6.4.4 Fission and fusion", "6.5.1 X-rays", "6.5.2 Diagnostic methods in medicine", "6.5.3 Ultrasound"];
+    const mathsList = ["1.1 Index laws", "1.2 Expanding brackets", "1.3 Factorising", "1.4 Negative and fractional indices", "1.5 Surds", "1.6 Rationalising denominators", "2.1 Solving quadratic equations", "2.2 Completing the square", "2.3 Functions", "2.4 Quadratic graphs", "2.5 The discriminant", "2.6 Modelling with quadratics", "3.1 Linear simultaneous equations", "3.2 Quadratic simultaneous equations", "3.3 Simultaneous equations on graphs", "3.4 Linear inequalities", "3.5 Quadratic inequalities", "3.6 Inequalities on graphs", "3.7 Regions", "4.1 Cubic graphs", "4.2 Quartic graphs", "4.3 Reciprocal graphs", "4.4 Points of intersection", "4.5 Translating graphs", "4.6 Stretching graphs", "4.7 Transforming functions", "5.1 y = mx + c", "5.2 Equations of straight lines", "5.3 Parallel and perpendicular lines", "5.4 Length and area", "5.5 Modelling with straight lines", "6.1 Midpoints and perpendicular bisectors", "6.2 Equation of a circle", "6.3 Intersections of straight lines and circles", "6.4 Use tangent and chord properties", "6.5 Circles and triangles", "7.1 Algebraic fractions", "7.2 Dividing polynomials", "7.3 The factor theorem", "7.4 Mathematical proof", "7.5 Methods of proof", "8.1 Pascal’s triangle", "8.2 Factorial notation", "8.3 The binomial expansion", "8.4 Solving binomial problems", "8.5 Binomial estimation", "9.1 The cosine rule", "9.2 The sine rule", "9.3 Areas of triangles", "9.4 Solving triangle problems", "9.5 Graphs of sine, cosine and tangent", "9.6 Transforming trigonometric graphs", "10.1 Angles in all four quadrants", "10.2 Exact values of trigonometrical ratios", "10.3 Trigonometric identities", "10.4 Simple trigonometric equations", "10.5 Harder trigonometric equations", "10.6 Equations and identities", "11.1 Vectors", "11.2 Representing vectors", "11.3 Magnitude and direction", "11.4 Position vectors", "11.5 Solving geometric problems", "11.6 Modelling with vectors", "12.1 Gradients of curves", "12.2 Finding the derivative", "12.3 Differentiating xn", "12.4 Differentiating quadratics", "12.5 Differentiating functions with two or more terms", "12.6 Gradients, tangents and normal", "12.7 Increasing and decreasing functions", "12.8 Second order derivatives", "12.9 Stationary points", "12.10 Sketching gradient functions", "12.11 Modelling with differentiation", "13.1 Integrating xn", "13.2 Indefinite integrals", "13.3 Finding functions", "13.4 Definite integrals", "13.5 Areas under curves", "13.6 Areas under the x-axis", "13.7 Areas between curves and lines", "14.1 Exponential functions", "14.2 y = ex", "14.3 Exponential modelling", "14.4 Logarithms", "14.5 Laws of logarithms", "14.6 Solving equations using logarithms", "14.7 Working with natural logarithms", "14.8 Logarithms and non-linear data", "1.1 Populations and samples", "1.2 Sampling", "1.3 Non-random sampling", "1.4 Types of data", "1.5 The large data set", "2.1 Measures of central tendency", "2.2 Other measures of location", "2.3 Measures of spread", "2.4 Variance and standard deviation", "2.5 Coding", "3.1 Outliers", "3.2 Box plots", "3.3 Cumulative frequency", "3.4 Histograms", "3.5 Comparing data", "4.1 Correlation", "4.2 Linear regression", "5.1 Calculating probabilities", "5.2 Venn diagrams", "5.3 Mutually exclusive and independent events", "5.4 Tree diagrams", "6.1 Probability distributions", "6.2 The binomial distribution", "6.3 Cumulative probabilities", "7.1 Hypothesis testing", "7.2 Finding critical values", "7.3 One-tailed tests", "7.4 Two-tailed tests", "8.1 Constructing a model", "8.2 Modelling assumptions", "8.3 Quantities and units", "8.4 Working with vectors", "9.1 Displacement–time graphs", "9.2 Velocity–time graphs", "9.3 Constant acceleration formulae 1", "9.4 Constant acceleration formulae 2", "9.5 Vertical motion under gravity", "10.1 Force diagrams", "10.2 Forces as vectors", "10.3 Forces and acceleration", "10.4 Motion in 2 dimensions", "10.5 Connected particles", "10.6 Pulleys", "11.1 Functions of time", "11.2 Using differentiation", "11.3 Maxima and minima problems", "11.4 Using integration", "11.5 Constant acceleration formulae", "1.1 Proof by contradiction", "1.2 Algebraic fractions", "1.3 Partial fractions", "1.4 Repeated factors", "1.5 Algebraic division", "2.1 The modulus function", "2.2 Functions and mappings", "2.3 Composite functions", "2.4 Inverse functions", "2.5 y = |f(x)| and y = f(|x|)", "2.6 Combining transformations", "2.7 Solving modulus problems", "3.1 Arithmetic sequences", "3.2 Arithmetic series", "3.3 Geometric sequences", "3.4 Geometric series", "3.5 Sum to infinity", "3.6 Sigma notation", "3.7 Recurrence relations", "3.8 Modelling with series", "4.1 Expanding (1 + x)n", "4.2 Expanding (a + bx)n", "4.3 Using partial fractions", "5.1 Radian measure", "5.2 Arc length", "5.3 Areas of sectors and segments", "5.4 Solving trigonometric equations", "5.5 Small angle approximations", "6.1 Secant, cosecant and cotangent", "6.2 Graphs of sec x, cosec x and cot x", "6.3 Using sec x, cosec x and cot x", "6.4 Trigonometric identities", "6.5 Inverse trigonometric functions", "7.1 Addition formulae", "7.2 Using the angle addition formulae", "7.3 Double-angle formulae", "7.4 Solving trigonometric equations", "7.5 Simplifying a cos x ± b sin x", "7.6 Proving trigonometric identities", "7.7 Modelling with trigonometric functions", "8.1 Parametric equations", "8.2 Using trigonometric identities", "8.3 Curve sketching", "8.4 Points of intersection", "8.5 Modelling with parametric equations", "9.1 Differentiating sin x and cos x", "9.2 Differentiating exponentials and logarithms", "9.3 The chain rule", "9.4 The product rule", "9.5 The quotient rule", "9.6 Differentiating trigonometric functions", "9.7 Parametric differentiation", "9.8 Implicit differentiation", "9.9 Using second derivatives", "9.10 Rates of change", "10.1 Locating roots", "10.2 Iteration", "10.3 The Newton–Raphson method", "10.4 Applications to modelling", "11.1 Integrating standard functions", "11.2 Integrating f(ax + b)", "11.
